@@ -3,11 +3,21 @@ import { Checkbox, Tooltip, Button, Badge, Avatar } from "neetoui";
 import dayjs from "dayjs";
 import tagOptions from "constants/tagOptions";
 
+import DeleteAlert from "./DeleteAlert";
+
 export default function NoteTable({
   selectedNoteIds,
   setSelectedNoteIds,
-  notes = []
+  notes = [],
+  setNotes,
+  showDeleteAlert,
+  setShowDeleteAlert
 }) {
+  const handleDelete = noteId => {
+    setShowDeleteAlert(true);
+    setSelectedNoteIds([noteId]);
+  };
+
   return (
     <div className="w-full px-4">
       <table className="nui-table nui-table--checkbox nui-table--actions">
@@ -107,7 +117,11 @@ export default function NoteTable({
                     <Button style="icon" icon="ri-pencil-line" />
                   </Tooltip>
                   <Tooltip content="Delete" position="bottom">
-                    <Button style="icon" icon="ri-delete-bin-line" />
+                    <Button
+                      style="icon"
+                      icon="ri-delete-bin-line"
+                      onClick={() => handleDelete(note.id)}
+                    />
                   </Tooltip>
                 </div>
               </td>
@@ -115,6 +129,15 @@ export default function NoteTable({
           ))}
         </tbody>
       </table>
+      {showDeleteAlert && (
+        <DeleteAlert
+          selectedNoteIds={selectedNoteIds}
+          setSelectedNoteIds={setSelectedNoteIds}
+          notes={notes}
+          setNotes={setNotes}
+          onClose={() => setShowDeleteAlert(false)}
+        />
+      )}
     </div>
   );
 }
