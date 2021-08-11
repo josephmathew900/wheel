@@ -78,6 +78,9 @@ const Notes = () => {
             selectedNoteIds={selectedNoteIds}
             setSelectedNoteIds={setSelectedNoteIds}
             notes={notes}
+            setNotes={setNotes}
+            showDeleteAlert={showDeleteAlert}
+            setShowDeleteAlert={setShowDeleteAlert}
           />
         </>
       ) : (
@@ -97,8 +100,10 @@ const Notes = () => {
       {showDeleteAlert && (
         <DeleteAlert
           selectedNoteIds={selectedNoteIds}
+          setSelectedNoteIds={setSelectedNoteIds}
+          notes={notes}
+          setNotes={setNotes}
           onClose={() => setShowDeleteAlert(false)}
-          refetch={fetchNotes}
         />
       )}
     </>
