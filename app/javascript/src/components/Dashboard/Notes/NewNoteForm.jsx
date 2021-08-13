@@ -1,36 +1,63 @@
-import React from "react";
-import * as yup from "yup";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
-import { Input, Textarea } from "neetoui/formik";
-import { Button } from "neetoui";
-import notesApi from "apis/notes";
+import { Button, Toastr, Switch, DateInput } from "neetoui";
+import { Input, Textarea, Select } from "neetoui/formik";
+import formInitialValues from "constants/formInitialValues";
+import formValidationSchemas from "constants/formValidationSchemas";
+import { TAG_OPTIONS, CONTACT_OPTIONS } from "./Constants";
 
 export default function NewNoteForm({ onClose, refetch }) {
-  const handleSubmit = async values => {
+  const [showDueDate, setShowDueDate] = useState(false);
+  const [dueDate, setDueDate] = useState(new Date());
+
+  const handleSubmit = async () => {
     try {
-      await notesApi.create(values);
       refetch();
       onClose();
+      Toastr.success("New note added successfully");
     } catch (err) {
       logger.error(err);
     }
   };
   return (
     <Formik
-      initialValues={{
-        title: "",
-        description: ""
-      }}
+      initialValues={formInitialValues.newNoteForm}
       onSubmit={handleSubmit}
-      validationSchema={yup.object({
-        title: yup.string().required("Title is required"),
-        description: yup.string().required("Description is required")
-      })}
+      validationSchema={formValidationSchemas.newNoteForm}
     >
       {({ isSubmitting }) => (
         <Form>
-          <Input label="Title" name="title" className="mb-6" />
-          <Textarea label="Description" name="description" rows={8} />
+          <div className="nui-pane__body nui-pane__body--has-footer pb-6 space-y-3.5">
+            <Input label="Note Title" name="title" placeholder="Title" />
+            <Select
+              label="Tags"
+              placeholder="Select a Tag"
+              name="tags"
+              options={TAG_OPTIONS}
+            />
+            <Textarea label="Note Description" name="description" rows={8} />
+            <Select
+              label="Assigned Contact"
+              placeholder="Select a Contact"
+              name="assignedContact"
+              options={CONTACT_OPTIONS}
+            />
+            <div className="flex justify-between">
+              <label htmlFor="dueDate">Add Due Date to Note</label>
+              <Switch
+                id="dueDate"
+                checked={showDueDate}
+                onChange={e => setShowDueDate(e.target.checked)}
+              />
+            </div>
+            {showDueDate && (
+              <DateInput
+                value={dueDate}
+                label="Due Date"
+                onChange={newDate => setDueDate(newDate)}
+              />
+            )}
+          </div>
           <div className="nui-pane__footer nui-pane__footer--absolute">
             <Button
               onClick={onClose}
