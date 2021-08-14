@@ -6,11 +6,13 @@ import EmptyState from "components/Common/EmptyState";
 import EmptyNotesListImage from "images/EmptyNotesList";
 
 import ContactTable from "./ContactTable";
+import NewContactPane from "./NewContactPane";
 import DeleteAlert from "./DeleteAlert";
 import { CONTACT_LIST, SORT_OPTIONS } from "./constants";
 
 const Contacts = () => {
   const [loading, setLoading] = useState(false);
+  const [showNewContactPane, setShowNewContactPane] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContactIds, setSelectedContactIds] = useState([]);
@@ -39,7 +41,11 @@ const Contacts = () => {
       <Header
         title="Contacts"
         actionBlock={
-          <Button onClick={() => {}} label="New Contact" icon="ri-add-line" />
+          <Button
+            onClick={() => setShowNewContactPane(true)}
+            label="New Contact"
+            icon="ri-add-line"
+          />
         }
       />
       {contacts.length ? (
@@ -78,10 +84,15 @@ const Contacts = () => {
         <EmptyState
           image={EmptyNotesListImage}
           title="Your Contacts list is empty"
-          primaryAction={() => {}}
+          primaryAction={() => setShowNewContactPane(true)}
           primaryActionLabel="Add New Contact"
         />
       )}
+      <NewContactPane
+        showPane={showNewContactPane}
+        setShowPane={setShowNewContactPane}
+        fetchContacts={fetchContacts}
+      />
       {showDeleteAlert && (
         <DeleteAlert
           selectedContactIds={selectedContactIds}
