@@ -57,14 +57,14 @@ export const CONTACT_OPTIONS = [
 
 export const FORM_INITIAL_VALUES = {
   title: "",
-  tags: "",
+  tag: "",
   description: "",
   assignedContact: ""
 };
 
 export const FORM_VALIDATION_SCHEMA = Yup.object().shape({
   title: Yup.string().required("Title is required"),
-  tags: Yup.object().required("Tag is required"),
+  tag: Yup.object().required("Tag is required"),
   description: Yup.string().required("Description is required"),
   assignedContact: Yup.object().required("Contact is required")
 });
