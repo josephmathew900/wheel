@@ -1,12 +1,12 @@
 import React from "react";
 import { Button } from "neetoui";
-export default function EmptyState({
+const EmptyState = ({
   image,
   title,
   subtitle,
   primaryAction,
   primaryActionLabel
-}) {
+}) => {
   return (
     <div className="flex flex-row items-start justify-start w-full h-full">
       <div className="w-3/5 m-auto">
@@ -30,4 +30,6 @@ export default function EmptyState({
       </div>
     </div>
   );
-}
+};
+
+export default EmptyState;

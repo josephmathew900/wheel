@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-// import notesApi from "apis/notes";
 import { Button, PageLoader } from "neetoui";
+import { Header, SubHeader } from "neetoui/layouts";
+
 import EmptyState from "components/Common/EmptyState";
 import EmptyNotesListImage from "images/EmptyNotesList";
-import { Header, SubHeader } from "neetoui/layouts";
 
 import NoteTable from "./NoteTable";
 import NewNotePane from "./NewNotePane";
 import DeleteAlert from "./DeleteAlert";
-
-import notesInitialList from "constants/notesInitialList";
-import sortOptions from "constants/sortOptions";
+import { NOTES, SORT_OPTIONS } from "./constants";
 
 const Notes = () => {
   const [loading, setLoading] = useState(true);
@@ -18,7 +16,7 @@ const Notes = () => {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedNoteIds, setSelectedNoteIds] = useState([]);
-  const [notes, setNotes] = useState(notesInitialList);
+  const [notes, setNotes] = useState(NOTES);
 
   useEffect(() => {
     fetchNotes();
@@ -27,8 +25,6 @@ const Notes = () => {
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      // const response = await notesApi.fetch();
-      // setNotes(response.data);
     } catch (error) {
       logger.error(error);
     } finally {
@@ -64,7 +60,7 @@ const Notes = () => {
               disabled: !selectedNoteIds.length
             }}
             sortProps={{
-              options: sortOptions,
+              options: SORT_OPTIONS,
               onClick: () => {}
             }}
             paginationProps={{
@@ -87,7 +83,6 @@ const Notes = () => {
         <EmptyState
           image={EmptyNotesListImage}
           title="Your Notes list is empty"
-          // subtitle="Add your notes to send customized emails to them."
           primaryAction={() => setShowNewNotePane(true)}
           primaryActionLabel="Add New Note"
         />

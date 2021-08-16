@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
-import { Button, Toastr, Switch, DateInput } from "neetoui";
+import { Button, Toastr, Switch, DateInput, Collapse } from "neetoui";
 import { Input, Textarea, Select } from "neetoui/formik";
-import formInitialValues from "constants/formInitialValues";
-import formValidationSchemas from "constants/formValidationSchemas";
-import { TAG_OPTIONS, CONTACT_OPTIONS } from "./Constants";
 
-export default function NewNoteForm({ onClose, refetch }) {
+import {
+  TAG_OPTIONS,
+  CONTACT_OPTIONS,
+  FORM_INITIAL_VALUES,
+  FORM_VALIDATION_SCHEMA
+} from "./constants";
+
+const NewNoteForm = ({ onClose, refetch }) => {
   const [showDueDate, setShowDueDate] = useState(false);
   const [dueDate, setDueDate] = useState(new Date());
 
@@ -21,9 +25,9 @@ export default function NewNoteForm({ onClose, refetch }) {
   };
   return (
     <Formik
-      initialValues={formInitialValues.newNoteForm}
+      initialValues={FORM_INITIAL_VALUES}
       onSubmit={handleSubmit}
-      validationSchema={formValidationSchemas.newNoteForm}
+      validationSchema={FORM_VALIDATION_SCHEMA}
     >
       {({ isSubmitting }) => (
         <Form>
@@ -50,13 +54,13 @@ export default function NewNoteForm({ onClose, refetch }) {
                 onChange={e => setShowDueDate(e.target.checked)}
               />
             </div>
-            {showDueDate && (
+            <Collapse open={showDueDate}>
               <DateInput
                 value={dueDate}
                 label="Due Date"
                 onChange={newDate => setDueDate(newDate)}
               />
-            )}
+            </Collapse>
           </div>
           <div className="nui-pane__footer nui-pane__footer--absolute">
             <Button
@@ -80,4 +84,6 @@ export default function NewNoteForm({ onClose, refetch }) {
       )}
     </Formik>
   );
-}
+};
+
+export default NewNoteForm;

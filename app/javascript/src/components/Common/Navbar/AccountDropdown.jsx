@@ -3,7 +3,7 @@ import { Avatar, Dropdown } from "neetoui";
 import { NavLink } from "react-router-dom";
 import { useUserState } from "contexts/user";
 
-export default function AccountDropdown({ handleLogout }) {
+const AccountDropdown = ({ handleLogout }) => {
   const { user } = useUserState();
   const contact = user
     ? { name: `${user.first_name} ${user.last_name}` }
@@ -41,4 +41,6 @@ export default function AccountDropdown({ handleLogout }) {
       </div>
     </Dropdown>
   );
-}
+};
+
+export default AccountDropdown;

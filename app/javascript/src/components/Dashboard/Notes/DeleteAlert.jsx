@@ -1,13 +1,13 @@
 import React from "react";
 import { Alert, Toastr } from "neetoui";
 
-export default function DeleteAlert({
+const DeleteAlert = ({
   selectedNoteIds,
   setSelectedNoteIds,
   notes,
   setNotes,
   onClose
-}) {
+}) => {
   const handleSubmit = () => {
     const newNotes = notes.filter(note => !selectedNoteIds.includes(note.id));
     setNotes(newNotes);
@@ -24,4 +24,6 @@ export default function DeleteAlert({
       submitButtonProps={{ label: "Delete", onClick: () => handleSubmit() }}
     />
   );
-}
+};
+
+export default DeleteAlert;

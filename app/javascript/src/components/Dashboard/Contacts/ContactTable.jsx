@@ -11,6 +11,31 @@ const ContactTable = ({
   showDeleteAlert,
   setShowDeleteAlert
 }) => {
+  const allContactsSelected =
+    selectedContactIds.length === contacts.map(contact => contact.id).length;
+
+  const handleHeaderCheckbox = () => {
+    const contactIds = contacts.map(contact => contact.id);
+    if (selectedContactIds.length === contactIds.length) {
+      setSelectedContactIds([]);
+    } else {
+      setSelectedContactIds(contactIds);
+    }
+  };
+
+  const handleBodyCheckbox = (contact, event) => {
+    event.stopPropagation();
+    const index = selectedContactIds.indexOf(contact.id);
+    if (index > -1) {
+      setSelectedContactIds([
+        ...selectedContactIds.slice(0, index),
+        ...selectedContactIds.slice(index + 1)
+      ]);
+    } else {
+      setSelectedContactIds([...selectedContactIds, contact.id]);
+    }
+  };
+
   const handleDelete = contactId => {
     setShowDeleteAlert(true);
     setSelectedContactIds([contactId]);
@@ -18,23 +43,13 @@ const ContactTable = ({
 
   return (
     <div className="w-full px-12 pt-12">
-      <table className="nui-table nui-table--checkbox nui-table--actions">
+      <table className="nui-table nui-table--checkbox nui-table--actions nui-table--hover">
         <thead>
           <tr>
             <th>
               <Checkbox
-                checked={
-                  selectedContactIds.length ===
-                  contacts.map(contact => contact.id).length
-                }
-                onClick={() => {
-                  const contactIds = contacts.map(contact => contact.id);
-                  if (selectedContactIds.length === contactIds.length) {
-                    setSelectedContactIds([]);
-                  } else {
-                    setSelectedContactIds(contactIds);
-                  }
-                }}
+                checked={allContactsSelected}
+                onClick={handleHeaderCheckbox}
               />
             </th>
             <th className="text-left">Name</th>
@@ -46,77 +61,62 @@ const ContactTable = ({
           </tr>
         </thead>
         <tbody>
-          {contacts.map(contact => (
-            <tr
-              key={contact.id}
-              className={"cursor-pointer bg-white hover:bg-gray-50"}
-            >
-              <td>
-                <Checkbox
-                  checked={selectedContactIds.includes(contact.id)}
-                  onClick={event => {
-                    event.stopPropagation();
-                    const index = selectedContactIds.indexOf(contact.id);
-
-                    if (index > -1) {
-                      setSelectedContactIds([
-                        ...selectedContactIds.slice(0, index),
-                        ...selectedContactIds.slice(index + 1)
-                      ]);
-                    } else {
-                      setSelectedContactIds([
-                        ...selectedContactIds,
-                        contact.id
-                      ]);
-                    }
-                  }}
-                />
-              </td>
-              <td>
-                <div className="flex flex-row items-center justify-start space-x-2">
-                  <Avatar size={32} contact={{ name: contact.name }} />
-                  <span>{contact.name}</span>
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-start">
-                  {contact.email}
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center">
-                  {contact.department}
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center">
-                  {contact.contactNumber}
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center">
+          {contacts.map(contact => {
+            const isChecked = selectedContactIds.includes(contact.id);
+            return (
+              <tr key={contact.id}>
+                <td>
                   <Checkbox
-                    name="checkbox_name"
-                    checked={contact.addToBaseCamp}
+                    checked={isChecked}
+                    onClick={event => handleBodyCheckbox(contact, event)}
                   />
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center space-x-2">
-                  <Tooltip content="Edit" position="bottom">
-                    <Button style="icon" icon="ri-pencil-line" />
-                  </Tooltip>
-                  <Tooltip content="Delete" position="bottom">
-                    <Button
-                      style="icon"
-                      icon="ri-delete-bin-line"
-                      onClick={() => handleDelete(contact.id)}
+                </td>
+                <td>
+                  <div className="flex flex-row items-center justify-start space-x-2">
+                    <Avatar size={32} contact={{ name: contact.name }} />
+                    <span>{contact.name}</span>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-start">
+                    {contact.email}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center">
+                    {contact.department}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center">
+                    {contact.contactNumber}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center">
+                    <Checkbox
+                      name="checkbox_name"
+                      checked={contact.addToBaseCamp}
                     />
-                  </Tooltip>
-                </div>
-              </td>
-            </tr>
-          ))}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center space-x-2">
+                    <Tooltip content="Edit" position="bottom">
+                      <Button style="icon" icon="ri-pencil-line" />
+                    </Tooltip>
+                    <Tooltip content="Delete" position="bottom">
+                      <Button
+                        style="icon"
+                        icon="ri-delete-bin-line"
+                        onClick={() => handleDelete(contact.id)}
+                      />
+                    </Tooltip>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {showDeleteAlert && (

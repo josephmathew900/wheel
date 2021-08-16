@@ -1,41 +1,57 @@
 import React from "react";
 import { Checkbox, Tooltip, Button, Badge, Avatar } from "neetoui";
 import dayjs from "dayjs";
-import tagOptions from "constants/tagOptions";
+import { BADGE_OPTIONS } from "./constants";
 
 import DeleteAlert from "./DeleteAlert";
 
-export default function NoteTable({
+const NoteTable = ({
   selectedNoteIds,
   setSelectedNoteIds,
   notes = [],
   setNotes,
   showDeleteAlert,
   setShowDeleteAlert
-}) {
+}) => {
+  const allNotesSelected =
+    selectedNoteIds.length === notes.map(note => note.id).length;
+
+  const handleHeaderCheckbox = () => {
+    const noteIds = notes.map(note => note.id);
+    if (selectedNoteIds.length === noteIds.length) {
+      setSelectedNoteIds([]);
+    } else {
+      setSelectedNoteIds(noteIds);
+    }
+  };
+
+  const handleBodyCheckbox = (note, event) => {
+    event.stopPropagation();
+    const index = selectedNoteIds.indexOf(note.id);
+    if (index > -1) {
+      setSelectedNoteIds([
+        ...selectedNoteIds.slice(0, index),
+        ...selectedNoteIds.slice(index + 1)
+      ]);
+    } else {
+      setSelectedNoteIds([...selectedNoteIds, note.id]);
+    }
+  };
+
   const handleDelete = noteId => {
     setShowDeleteAlert(true);
     setSelectedNoteIds([noteId]);
   };
 
   return (
-    <div className="w-full px-4">
-      <table className="nui-table nui-table--checkbox nui-table--actions">
+    <div className="w-full px-24 pt-12">
+      <table className="nui-table nui-table--checkbox nui-table--actions nui-table--hover">
         <thead>
           <tr>
             <th>
               <Checkbox
-                checked={
-                  selectedNoteIds.length === notes.map(note => note.id).length
-                }
-                onClick={() => {
-                  const noteIds = notes.map(note => note.id);
-                  if (selectedNoteIds.length === noteIds.length) {
-                    setSelectedNoteIds([]);
-                  } else {
-                    setSelectedNoteIds(noteIds);
-                  }
-                }}
+                checked={allNotesSelected}
+                onClick={handleHeaderCheckbox}
               />
             </th>
             <th className="text-left">Title</th>
@@ -48,85 +64,75 @@ export default function NoteTable({
           </tr>
         </thead>
         <tbody>
-          {notes.map(note => (
-            <tr
-              key={note.id}
-              className={"cursor-pointer bg-white hover:bg-gray-50"}
-            >
-              <td>
-                <Checkbox
-                  checked={selectedNoteIds.includes(note.id)}
-                  onClick={event => {
-                    event.stopPropagation();
-                    const index = selectedNoteIds.indexOf(note.id);
-
-                    if (index > -1) {
-                      setSelectedNoteIds([
-                        ...selectedNoteIds.slice(0, index),
-                        ...selectedNoteIds.slice(index + 1)
-                      ]);
-                    } else {
-                      setSelectedNoteIds([...selectedNoteIds, note.id]);
-                    }
-                  }}
-                />
-              </td>
-              <td>
-                <div className="text-gray-900">
-                  <Button
-                    label={note.title}
-                    style="link"
-                    href="https://www.bigbinary.com"
+          {notes.map(note => {
+            const isChecked = selectedNoteIds.includes(note.id);
+            return (
+              <tr key={note.id}>
+                <td>
+                  <Checkbox
+                    checked={isChecked}
+                    onClick={event => {
+                      handleBodyCheckbox(note, event);
+                    }}
                   />
-                </div>
-              </td>
-              <td>
-                <div className="text-gray-900 max-w-xs truncate">
-                  {note.description}
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center text-gray-900">
-                  <Badge color={tagOptions[note.tag].color}>
-                    {tagOptions[note.tag].text}
-                  </Badge>
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center text-gray-900">
-                  {note.createdDate
-                    ? dayjs(note.createdDate).format("MMM D, YYYY")
-                    : "--"}
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center text-gray-900">
-                  {note.dueDate
-                    ? dayjs(note.dueDate).format("MMM D, YYYY")
-                    : "--"}
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center text-gray-900">
-                  <Avatar size={36} contact={{ name: note.contact }} />
-                </div>
-              </td>
-              <td>
-                <div className="flex flex-row justify-center space-x-2">
-                  <Tooltip content="Edit" position="bottom">
-                    <Button style="icon" icon="ri-pencil-line" />
-                  </Tooltip>
-                  <Tooltip content="Delete" position="bottom">
+                </td>
+                <td>
+                  <div className="text-gray-900">
                     <Button
-                      style="icon"
-                      icon="ri-delete-bin-line"
-                      onClick={() => handleDelete(note.id)}
+                      label={note.title}
+                      style="link"
+                      href="https://www.bigbinary.com"
                     />
-                  </Tooltip>
-                </div>
-              </td>
-            </tr>
-          ))}
+                  </div>
+                </td>
+                <td>
+                  <div className="text-gray-900 max-w-xs truncate">
+                    {note.description}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center text-gray-900">
+                    <Badge color={BADGE_OPTIONS[note.tag].color}>
+                      {BADGE_OPTIONS[note.tag].text}
+                    </Badge>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center text-gray-900">
+                    {note.createdDate
+                      ? dayjs(note.createdDate).format("MMM D, YYYY")
+                      : "--"}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center text-gray-900">
+                    {note.dueDate
+                      ? dayjs(note.dueDate).format("MMM D, YYYY")
+                      : "--"}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center text-gray-900">
+                    <Avatar size={36} contact={{ name: note.contact }} />
+                  </div>
+                </td>
+                <td>
+                  <div className="flex flex-row justify-center space-x-2">
+                    <Tooltip content="Edit" position="bottom">
+                      <Button style="icon" icon="ri-pencil-line" />
+                    </Tooltip>
+                    <Tooltip content="Delete" position="bottom">
+                      <Button
+                        style="icon"
+                        icon="ri-delete-bin-line"
+                        onClick={() => handleDelete(note.id)}
+                      />
+                    </Tooltip>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {showDeleteAlert && (
@@ -140,4 +146,6 @@ export default function NoteTable({
       )}
     </div>
   );
-}
+};
+
+export default NoteTable;
