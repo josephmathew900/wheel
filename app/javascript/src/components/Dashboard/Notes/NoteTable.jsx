@@ -46,7 +46,7 @@ const NoteTable = ({
   };
 
   return (
-    <div className="w-full px-24 pt-12">
+    <div className="w-full px-12 pt-12">
       <table className="nui-table nui-table--checkbox nui-table--actions nui-table--hover">
         <thead>
           <tr>
