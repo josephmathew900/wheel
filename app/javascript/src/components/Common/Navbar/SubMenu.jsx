@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-export default function SubMenu({ subLinks, title }) {
+const SubMenu = ({ subLinks, title }) => {
   return (
     <>
       <li className="font-semibold text-gray-800 pointer-events-none">
@@ -21,4 +21,6 @@ export default function SubMenu({ subLinks, title }) {
       ))}
     </>
   );
-}
+};
+
+export default SubMenu;

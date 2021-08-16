@@ -38,7 +38,7 @@ export const FORM_INITIAL_VALUES = {
 
 export const FORM_VALIDATION_SCHEMA = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  email: Yup.string().required("Email is required"),
+  email: Yup.string().email().required("Email is required"),
   contact: Yup.string().required("Contact is required"),
   department: Yup.object().required("Department is required")
 });

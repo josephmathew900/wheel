@@ -2,7 +2,7 @@ import React from "react";
 import { Pane } from "neetoui";
 import NewNoteForm from "./NewNoteForm";
 
-export default function NewNotePane({ fetchNotes, showPane, setShowPane }) {
+const NewNotePane = ({ fetchNotes, showPane, setShowPane }) => {
   const onClose = () => setShowPane(false);
   return (
     <Pane title="Add Note" isOpen={showPane} onClose={onClose}>
@@ -11,4 +11,6 @@ export default function NewNotePane({ fetchNotes, showPane, setShowPane }) {
       </div>
     </Pane>
   );
-}
+};
+
+export default NewNotePane;

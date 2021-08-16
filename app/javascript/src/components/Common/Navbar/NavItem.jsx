@@ -5,14 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import SubMenu from "./SubMenu";
 
-export default function NavItem({
-  icon,
-  link,
-  title,
-  subLinks,
-  onClick,
-  className
-}) {
+const NavItem = ({ icon, link, title, subLinks, onClick, className }) => {
   const history = useHistory();
   const location = useLocation();
   const isActive = link === location.pathname;
@@ -57,4 +50,6 @@ export default function NavItem({
       </div>
     );
   }
-}
+};
+
+export default NavItem;
