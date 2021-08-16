@@ -32,6 +32,11 @@ const Contacts = () => {
     }
   };
 
+  const handleNewContact = () => {
+    setShowNewContactPane(true);
+    setSelectedContactIds([]);
+  };
+
   if (loading) {
     return <PageLoader />;
   }
@@ -42,7 +47,7 @@ const Contacts = () => {
         title="Contacts"
         actionBlock={
           <Button
-            onClick={() => setShowNewContactPane(true)}
+            onClick={handleNewContact}
             label="New Contact"
             icon="ri-add-line"
           />
@@ -75,9 +80,8 @@ const Contacts = () => {
             selectedContactIds={selectedContactIds}
             setSelectedContactIds={setSelectedContactIds}
             contacts={contacts}
-            setContacts={setContacts}
-            showDeleteAlert={showDeleteAlert}
             setShowDeleteAlert={setShowDeleteAlert}
+            setShowPane={setShowNewContactPane}
           />
         </>
       ) : (
@@ -92,6 +96,8 @@ const Contacts = () => {
         showPane={showNewContactPane}
         setShowPane={setShowNewContactPane}
         fetchContacts={fetchContacts}
+        selectedContactIds={selectedContactIds}
+        contacts={contacts}
       />
       {showDeleteAlert && (
         <DeleteAlert

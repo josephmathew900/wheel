@@ -1,15 +1,13 @@
 import React from "react";
 import { Checkbox, Tooltip, Button, Avatar } from "neetoui";
-
-import DeleteAlert from "./DeleteAlert";
+import { DEPARTMENT_OPTIONS } from "./constants";
 
 const ContactTable = ({
   selectedContactIds,
   setSelectedContactIds,
   contacts,
-  setContacts,
-  showDeleteAlert,
-  setShowDeleteAlert
+  setShowDeleteAlert,
+  setShowPane
 }) => {
   const allContactsSelected =
     selectedContactIds.length === contacts.map(contact => contact.id).length;
@@ -41,6 +39,11 @@ const ContactTable = ({
     setSelectedContactIds([contactId]);
   };
 
+  const handleEdit = contactId => {
+    setShowPane(true);
+    setSelectedContactIds([contactId]);
+  };
+
   return (
     <div className="w-full px-12 pt-12">
       <table className="nui-table nui-table--checkbox nui-table--actions nui-table--hover">
@@ -63,6 +66,10 @@ const ContactTable = ({
         <tbody>
           {contacts.map(contact => {
             const isChecked = selectedContactIds.includes(contact.id);
+            const department = DEPARTMENT_OPTIONS.find(
+              option => contact.department == option.value
+            )?.label;
+
             return (
               <tr key={contact.id}>
                 <td>
@@ -84,7 +91,7 @@ const ContactTable = ({
                 </td>
                 <td>
                   <div className="flex flex-row justify-center">
-                    {contact.department}
+                    {department}
                   </div>
                 </td>
                 <td>
@@ -103,7 +110,11 @@ const ContactTable = ({
                 <td>
                   <div className="flex flex-row justify-center space-x-2">
                     <Tooltip content="Edit" position="bottom">
-                      <Button style="icon" icon="ri-pencil-line" />
+                      <Button
+                        style="icon"
+                        icon="ri-pencil-line"
+                        onClick={() => handleEdit(contact.id)}
+                      />
                     </Tooltip>
                     <Tooltip content="Delete" position="bottom">
                       <Button
@@ -119,15 +130,6 @@ const ContactTable = ({
           })}
         </tbody>
       </table>
-      {showDeleteAlert && (
-        <DeleteAlert
-          selectedContactIds={selectedContactIds}
-          setSelectedContactIds={setSelectedContactIds}
-          contacts={contacts}
-          setContacts={setContacts}
-          onClose={() => setShowDeleteAlert(false)}
-        />
-      )}
     </div>
   );
 };

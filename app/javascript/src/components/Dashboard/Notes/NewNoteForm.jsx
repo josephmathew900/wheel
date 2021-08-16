@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { isEmpty } from "ramda";
 import { Formik, Form } from "formik";
 import { Button, Toastr, Switch, DateInput, Collapse } from "neetoui";
 import { Input, Textarea, Select } from "neetoui/formik";
@@ -10,9 +11,23 @@ import {
   FORM_VALIDATION_SCHEMA
 } from "./constants";
 
-const NewNoteForm = ({ onClose, refetch }) => {
+const NewNoteForm = ({ onClose, refetch, selectedNoteIds, notes }) => {
   const [showDueDate, setShowDueDate] = useState(false);
   const [dueDate, setDueDate] = useState(new Date());
+
+  const formikInitialValues = isEmpty(selectedNoteIds)
+    ? FORM_INITIAL_VALUES
+    : notes.find(contact => selectedNoteIds.includes(contact.id));
+
+  useEffect(() => {
+    if (!isEmpty(selectedNoteIds)) {
+      const { dueDate } = formikInitialValues;
+      if (dueDate) {
+        setDueDate(new Date(dueDate));
+        setShowDueDate(true);
+      }
+    }
+  }, []);
 
   const handleSubmit = async () => {
     try {
@@ -25,7 +40,7 @@ const NewNoteForm = ({ onClose, refetch }) => {
   };
   return (
     <Formik
-      initialValues={FORM_INITIAL_VALUES}
+      initialValues={formikInitialValues}
       onSubmit={handleSubmit}
       validationSchema={FORM_VALIDATION_SCHEMA}
     >
@@ -34,9 +49,9 @@ const NewNoteForm = ({ onClose, refetch }) => {
           <div className="nui-pane__body nui-pane__body--has-footer pb-6 space-y-3.5">
             <Input label="Note Title" name="title" placeholder="Title" />
             <Select
-              label="Tags"
+              label="Tag"
               placeholder="Select a Tag"
-              name="tags"
+              name="tag"
               options={TAG_OPTIONS}
             />
             <Textarea label="Note Description" name="description" rows={8} />

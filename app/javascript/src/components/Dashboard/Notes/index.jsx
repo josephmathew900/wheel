@@ -32,6 +32,11 @@ const Notes = () => {
     }
   };
 
+  const handleNewContact = () => {
+    setSelectedNoteIds([]);
+    setShowNewNotePane(true);
+  };
+
   if (loading) {
     return <PageLoader />;
   }
@@ -41,7 +46,7 @@ const Notes = () => {
         title="Notes"
         actionBlock={
           <Button
-            onClick={() => setShowNewNotePane(true)}
+            onClick={handleNewContact}
             label="Add New Note"
             icon="ri-add-line"
           />
@@ -74,9 +79,8 @@ const Notes = () => {
             selectedNoteIds={selectedNoteIds}
             setSelectedNoteIds={setSelectedNoteIds}
             notes={notes}
-            setNotes={setNotes}
-            showDeleteAlert={showDeleteAlert}
             setShowDeleteAlert={setShowDeleteAlert}
+            setShowPane={setShowNewNotePane}
           />
         </>
       ) : (
@@ -91,6 +95,8 @@ const Notes = () => {
         showPane={showNewNotePane}
         setShowPane={setShowNewNotePane}
         fetchNotes={fetchNotes}
+        selectedNoteIds={selectedNoteIds}
+        notes={notes}
       />
       {showDeleteAlert && (
         <DeleteAlert

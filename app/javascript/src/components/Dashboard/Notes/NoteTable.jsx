@@ -1,17 +1,14 @@
 import React from "react";
 import { Checkbox, Tooltip, Button, Badge, Avatar } from "neetoui";
 import dayjs from "dayjs";
-import { BADGE_OPTIONS } from "./constants";
-
-import DeleteAlert from "./DeleteAlert";
+import { BADGE_OPTIONS, CONTACT_OPTIONS } from "./constants";
 
 const NoteTable = ({
   selectedNoteIds,
   setSelectedNoteIds,
-  notes = [],
-  setNotes,
-  showDeleteAlert,
-  setShowDeleteAlert
+  notes,
+  setShowDeleteAlert,
+  setShowPane
 }) => {
   const allNotesSelected =
     selectedNoteIds.length === notes.map(note => note.id).length;
@@ -43,6 +40,11 @@ const NoteTable = ({
     setSelectedNoteIds([noteId]);
   };
 
+  const handleEdit = noteId => {
+    setShowPane(true);
+    setSelectedNoteIds([noteId]);
+  };
+
   return (
     <div className="w-full px-24 pt-12">
       <table className="nui-table nui-table--checkbox nui-table--actions nui-table--hover">
@@ -66,6 +68,9 @@ const NoteTable = ({
         <tbody>
           {notes.map(note => {
             const isChecked = selectedNoteIds.includes(note.id);
+            const contactName = CONTACT_OPTIONS.find(
+              option => note.assignedContact == option.value
+            )?.label;
             return (
               <tr key={note.id}>
                 <td>
@@ -113,13 +118,17 @@ const NoteTable = ({
                 </td>
                 <td>
                   <div className="flex flex-row justify-center text-gray-900">
-                    <Avatar size={36} contact={{ name: note.contact }} />
+                    <Avatar size={36} contact={{ name: contactName }} />
                   </div>
                 </td>
                 <td>
                   <div className="flex flex-row justify-center space-x-2">
                     <Tooltip content="Edit" position="bottom">
-                      <Button style="icon" icon="ri-pencil-line" />
+                      <Button
+                        style="icon"
+                        icon="ri-pencil-line"
+                        onClick={() => handleEdit(note.id)}
+                      />
                     </Tooltip>
                     <Tooltip content="Delete" position="bottom">
                       <Button
@@ -135,15 +144,6 @@ const NoteTable = ({
           })}
         </tbody>
       </table>
-      {showDeleteAlert && (
-        <DeleteAlert
-          selectedNoteIds={selectedNoteIds}
-          setSelectedNoteIds={setSelectedNoteIds}
-          notes={notes}
-          setNotes={setNotes}
-          onClose={() => setShowDeleteAlert(false)}
-        />
-      )}
     </div>
   );
 };

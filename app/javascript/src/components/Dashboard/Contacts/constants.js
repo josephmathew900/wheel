@@ -5,7 +5,7 @@ export const CONTACT_LIST = [
     id: 1,
     name: "Neeraj Singh",
     email: "neeraj@bigbinary.com",
-    department: "Engineering",
+    department: "eng",
     contactNumber: "(555)-390-102",
     addToBaseCamp: false
   },
@@ -13,9 +13,9 @@ export const CONTACT_LIST = [
     id: 2,
     name: "Vinay Chandran",
     email: "vinay@bigbinary.com",
-    department: "Engineering",
+    department: "eng",
     contactNumber: "99210011001",
-    addToBaseCamp: false
+    addToBaseCamp: true
   }
 ];
 
@@ -32,13 +32,13 @@ export const DEPARTMENT_OPTIONS = [
 export const FORM_INITIAL_VALUES = {
   name: "",
   email: "",
-  contact: "",
+  contactNumber: "",
   department: ""
 };
 
 export const FORM_VALIDATION_SCHEMA = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email().required("Email is required"),
-  contact: Yup.string().required("Contact is required"),
+  contactNumber: Yup.string().required("Contact is required"),
   department: Yup.object().required("Department is required")
 });
