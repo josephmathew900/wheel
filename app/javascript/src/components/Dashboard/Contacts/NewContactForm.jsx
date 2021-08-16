@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
-import { Button, Switch, Toastr } from "neetoui";
-import { Input, Select } from "neetoui/formik";
+import { isEmpty } from "ramda";
+import { Button, Toastr } from "neetoui";
+import { Input, Select, Switch } from "neetoui/formik";
 
 import {
   DEPARTMENT_OPTIONS,
@@ -9,8 +10,10 @@ import {
   FORM_VALIDATION_SCHEMA
 } from "./constants";
 
-const NewContactForm = ({ onClose, refetch }) => {
-  const [addToBasecamp, setAddToBasecamp] = useState(false);
+const NewContactForm = ({ onClose, refetch, selectedContactIds, contacts }) => {
+  const formikInitialValues = isEmpty(selectedContactIds)
+    ? FORM_INITIAL_VALUES
+    : contacts.find(contact => selectedContactIds.includes(contact.id));
 
   const handleSubmit = async () => {
     try {
@@ -24,7 +27,7 @@ const NewContactForm = ({ onClose, refetch }) => {
 
   return (
     <Formik
-      initialValues={FORM_INITIAL_VALUES}
+      initialValues={formikInitialValues}
       onSubmit={handleSubmit}
       validationSchema={FORM_VALIDATION_SCHEMA}
     >
@@ -35,7 +38,7 @@ const NewContactForm = ({ onClose, refetch }) => {
             <Input label="Email" name="email" placeholder="Email" />
             <Input
               label="Contact Number"
-              name="contact"
+              name="contactNumber"
               placeholder="Contact Number"
             />
             <Select
@@ -43,15 +46,12 @@ const NewContactForm = ({ onClose, refetch }) => {
               placeholder="Select a Department"
               name="department"
               options={DEPARTMENT_OPTIONS}
+              defaultValue={{ label: "Engineering", value: "eng" }}
             />
 
             <div className="flex justify-between">
               <label htmlFor="basecamp">Add to Basecamp</label>
-              <Switch
-                id="basecamp"
-                checked={addToBasecamp}
-                onChange={() => setAddToBasecamp(!addToBasecamp)}
-              />
+              <Switch id="basecamp" name="addToBaseCamp" />
             </div>
           </div>
           <div className="nui-pane__footer nui-pane__footer--absolute">

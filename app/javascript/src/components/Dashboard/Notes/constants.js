@@ -9,7 +9,7 @@ export const NOTES = [
     tag: "internal",
     createdDate: dayjs(),
     dueDate: "",
-    contact: "Joseph Mathew"
+    assignedContact: "jm"
   },
   {
     id: 2,
@@ -17,8 +17,8 @@ export const NOTES = [
     description: "Feedback v1.0",
     tag: "agileWorkflow",
     createdDate: dayjs(),
-    dueDate: dayjs(),
-    contact: "Joseph Varghese"
+    dueDate: dayjs().add(1, "year"),
+    assignedContact: "jv"
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ export const NOTES = [
     tag: "bug",
     createdDate: dayjs(),
     dueDate: "",
-    contact: "Karthik Menon"
+    assignedContact: "km"
   }
 ];
 
