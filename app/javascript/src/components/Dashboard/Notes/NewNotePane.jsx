@@ -1,5 +1,7 @@
 import React from "react";
+import { isEmpty } from "ramda";
 import { Pane } from "neetoui";
+
 import NewNoteForm from "./NewNoteForm";
 
 const NewNotePane = ({
@@ -10,8 +12,9 @@ const NewNotePane = ({
   notes
 }) => {
   const onClose = () => setShowPane(false);
+  const title = isEmpty(selectedNoteIds) ? "Add Note" : "Edit Note";
   return (
-    <Pane title="Add Note" isOpen={showPane} onClose={onClose}>
+    <Pane title={title} isOpen={showPane} onClose={onClose}>
       <div className="px-6">
         <NewNoteForm
           onClose={onClose}
